@@ -1,0 +1,32 @@
+pipeline {
+    agent any
+
+        stages {
+        stage(compile) {
+            steps {
+                script{
+                    echo "compile the code"
+                }
+                }
+        }    
+                stage(Unittest) {
+            steps {
+                script{
+                    echo "run the test cases"
+                }
+                }
+                }    
+                stage(package) {
+            steps {
+                script{
+                    echo "package the code"
+                }
+                }
+
+                
+            }
+
+            
+            }
+        }
+
