@@ -7,14 +7,14 @@ pipeline {
 
                }
         stages {
-        stage(compile) {
+        stage('compile') {
             steps {
                 script{
                     echo "compile the code"
                 }
                 }
         }    
-                stage(Unittest) {
+                stage('Unittest') {
                     When {
                       expression{
                         params.executeTests == true
@@ -26,7 +26,7 @@ pipeline {
                 }
                 }
                 }    
-                stage(package) {
+                stage('package') {
             steps {
                 script{
                     echo "package the code"
