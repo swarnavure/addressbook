@@ -28,13 +28,8 @@ pipeline {
         }
 
 
-                stage('package') {
-                    when{
-                        expression{
-                            BRANCH_NAME =='master' 
-                        }
-                    }
-
+                stage('package') {                    
+   
             steps {
                 script{
                     echo "package the code"
@@ -42,7 +37,7 @@ pipeline {
                     echo "deploying the app version:${params.APPVERSION}"
                 }
                 }
-
+                }
                 
             }
 
