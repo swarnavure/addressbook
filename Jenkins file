@@ -14,18 +14,19 @@ pipeline {
                 }
                 }
         }    
-                stage('Unittest') {
-                    When {
-                      expression{
-                        params.executeTests == true
-                      }                        
-                    }
+                stage('UnitTest') {
+            when{
+                expression{
+                    params.executeTests == true
+                }
+            }
             steps {
                 script{
-                    echo "run the test cases"
+                    echo "Running the test cases"
                 }
-                }
-                }    
+            }
+        }
+
                 stage('package') {
             steps {
                 script{
