@@ -3,8 +3,10 @@ pipeline {
     tools{
         jdk 'myjava'
         maven 'mymaven'
-    }
-     
+      }
+      environment{
+        BUILD_SERVER_IP ='ec2-user@65.0.81.121'
+      }
         stages {
         stage('compile') {
               agent {label 'slave2'}
@@ -30,17 +32,16 @@ pipeline {
             }
         }
         }
-
-
             stage('package') {                    
               agent any    
              steps {
                 script{
-                    sshagent(['ssh-key']) {
-                    
-                    echo "package the code"
-                    sh "ssh -o StrictHostKeyChecking=no 'bash mvn package'"
-                    
+                    sshagent(['ssh-key']) { 
+                     echo "package the code"
+                      sh "scp -o StrictHostKeyChecking=no server-script.sh $(BUILD_SERVER_IP):/home/ec2-user 
+                      sh "ssh -o StrictHostKeyChecking=no $(BUILD_SERVER_IP):/home/ec2-user 'bash ~/server-script.sh'"
+                      
+                     }
                 }
                 }
                 }
@@ -49,5 +50,5 @@ pipeline {
 
             
             }
-        
+}        
 
