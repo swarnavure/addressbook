@@ -35,7 +35,7 @@ pipeline {
         }
         }
             stage('package and build the docker image') {                    
-                 
+               agent any  
              steps {
                 script{
                     sshagent(['ssh-key']) { 
