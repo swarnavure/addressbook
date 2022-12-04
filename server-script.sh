@@ -1,4 +1,4 @@
-sudo yum install java-1.8.0-openjdk-deve1 -y
+sudo yum install java-11.0.16-openjdk-deve1 -y
 sudo yum install git -y
 sudo yum install maven -y
 if [-d "addressbook"]
@@ -12,3 +12,5 @@ git clone https://github.com/swarnavure/addressbook.git
 cd /home/ec2-user/addressbook
 fi
 mvn package
+sudo yum install docker -y
+sudo systemctl start docker
