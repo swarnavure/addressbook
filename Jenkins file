@@ -5,9 +5,9 @@ pipeline {
         maven 'mymaven'
       }
       environment{
-        BUILD_SERVER_IP ='ec2-user@43.205.94.137'
+        BUILD_SERVER_IP ='ec2-user@13.233.7.212'
         IMAGE_NAME = 'swarnavure/myimage:$BUILD_NUMBER'
-        DEPLOY_SERVER_IP ='ec2-user@3.110.83.117'
+        DEPLOY_SERVER_IP ='ec2-user@65.2.177.159'
       }
         stages {
         stage('compile') {
