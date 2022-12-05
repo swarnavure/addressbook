@@ -34,12 +34,12 @@ pipeline {
             }
         }
         }
-            stage('package and build the docker image') {                    
-               agent any  
-             steps {
-                script{
-                    sshagent(['ssh-key']) { 
-                        withCredentials([usernamePassword(credentialsId: 'dockerhub', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]) {
+        stage('package and build the docker image') {                    
+         agent any  
+         steps {
+            script{
+              sshagent(['ssh-key']) { 
+            withCredentials([usernamePassword(credentialsId: 'dockerhub', passwordVariable: 'PASSWORD',usernameVariable:'USERNAME')]) {
                        echo "package the code"
                       sh "scp -o StrictHostKeyChecking=no server-script.sh ${BUILD_SERVER_IP}:/home/ec2-user"
                       sh "ssh -o StrictHostKeyChecking=no ${BUILD_SERVER_IP} 'bash ~/server-script.sh'"
