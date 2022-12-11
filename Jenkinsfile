@@ -41,9 +41,9 @@ pipeline{
                     sh 'sudo yum install docker -y'
                     sh 'sudo systemctl start docker'
                     withCredentials([usernamePassword(credentialsId: 'dockerhub', passwordVariable: 'PASS', usernameVariable: 'USER')]) {
-            sh 'sudo docker build -t swarnavure/myimage:$BUILD_NUMBER .'
+            sh 'sudo docker build -t swarnavure/myimage1:$BUILD_NUMBER .'
             sh 'sudo docker login -u $USER -p $PASS'
-            sh 'sudo docker push swarnavure/myimage:$BUILD_NUMBER'
+            sh 'sudo docker push swarnavure/myimage1:$BUILD_NUMBER'
 }
                 }
             }
