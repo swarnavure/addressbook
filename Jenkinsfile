@@ -40,7 +40,7 @@ pipeline{
                     echo "Building the docker image"
                     sh 'sudo yum install docker -y'
                     sh 'sudo systemctl start docker'
-                    withCredentials([usernamePassword(credentialsId: 'docker-hub', passwordVariable: 'PASS', usernameVariable: 'USER')]) {
+                    withCredentials([usernamePassword(credentialsId: 'dockerhub', passwordVariable: 'PASS', usernameVariable: 'USER')]) {
             sh 'sudo docker build -t swarnavure/myimage:$BUILD_NUMBER .'
             sh 'sudo docker login -u $USER -p $PASS'
             sh 'sudo docker push swarnavure/myimage:$BUILD_NUMBER'
