@@ -1,0 +1,18 @@
+version: "3"
+services:
+   web:
+     image: myimage:php
+     ports:
+     - "8001:80"
+     depends_on:
+     - mysql
+   mysql:
+    image: myimage:mysql
+    environment:
+        MYSQL_ROOT_PASSWORD: password
+        MYSQL_DATABASE : mydatabase
+    volumes:
+      - db_data:/var/lib/mysql
+   volumes:
+     db_data: {}
+
