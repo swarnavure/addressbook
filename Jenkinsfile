@@ -4,6 +4,11 @@ pipeline{
         maven 'mymaven'
         jdk 'myjava'
     }
+     environment{
+        IMAGE_NAME = 'swarnavure/myimage:$BUILD_NUMBER'
+        DEV_SERVER_IP = 'ec2-user@3.110.114.84'
+        APP_NAME = 'java-mvn-app'
+     }
     stages{
         stage("Compile"){
             steps{
@@ -34,24 +39,30 @@ pipeline{
               }
              }
          }
-        stage("Build the docker image"){
+        stage("Build the docker image on build server"){
             steps{
                 script{
+
                     echo "Building the docker image"
                     sh 'sudo yum install docker -y'
                     sh 'sudo systemctl start docker'
-                    withCredentials([usernamePassword(credentialsId: 'dockerhub', passwordVariable: 'PASS', usernameVariable: 'USER')]) {
-            sh 'sudo docker build -t swarnavure/myimage1:$BUILD_NUMBER .'
-            sh 'sudo docker login -u $USER -p $PASS'
-            sh 'sudo docker push swarnavure/myimage1:$BUILD_NUMBER'
-            }
+                    sshagent(['ssh-key']) {
+                     withCredentials([usernamePassword(credentialsId: 'dockerhub', passwordVariable: 'PASS', usernameVariable: 'USER')]) {
+                     sh "ssh -o StrictHostKeyChecking=no server-script.sh ${DEV_SERVER_IP}:/home/ec2-user"
+                     sh "ssh -o StrictHostKeyChecking=no ${DEV_SERVER_IP} 'bash ~/server.script.sh'"
+                                   
+                     sh "ssh ${DEV_SERVER_IP} sudo docker build -t ${IMAGE_NAME} /home/ec2-user/addressbook"
+                     sh "ssh ${DEV_SERVER_IP} sudo docker login -u $USER -p $PASS"
+                     sh "ssh ${DEV_SERVER_IP} sudo docker push ${IMAGE_NAME}"
               }
             }
-        }
+           }
+         } 
+        } 
         stage("Provision deploy server"){
         environment{
-            AWS_ACCESS_KEY_ID =credentials("AKIA45OPVZZFEMQNFAM2")
-            AWS_SECRET_ACCESS_KEY=credentials("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")
+            AWS_ACCESS_KEY_ID =credentials("AWS_ACCESS_KEY_ID")
+            AWS_SECRET_ACCESS_KEY=credentials("AWS_SECRET_ACCESS_KEY")
         }
         steps{
             script{
@@ -72,7 +83,7 @@ pipeline{
             steps{
                 script{
             echo "deploying the app"
-            sshagent(['deploy-server-ssh-key']) {
+            sshagent(['ssh-key']) {
                       withCredentials([usernamePassword(credentialsId: 'dockerhub', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]) {
                         sh "ssh -o StrictHostKeyChecking=no ec2-user@${EC2_PUBLIC_IP} 'sudo docker login -u $USERNAME -p $PASSWORD'"
                         sh "ssh -o StrictHostKeyChecking=no ec2-user@${EC2_PUBLIC_IP}  ${ShellCmd}"
