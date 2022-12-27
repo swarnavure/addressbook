@@ -41,9 +41,9 @@ pipeline{
                     sh 'sudo yum install docker -y'
                     sh 'sudo systemctl start docker'
                     withCredentials([usernamePassword(credentialsId: 'dockerhub', passwordVariable: 'PASS', usernameVariable: 'USER')]) {
-                  sh 'sudo docker build -t swarnavure/myimage:$BUILD_NUMBER .'
-                  sh 'sudo docker login -u $USER -p $PASS'
-                  sh 'sudo docker push swarnavure/myimage:$BUILD_NUMBER'
+            sh 'sudo docker build -t swarnavure/myimage1:$BUILD_NUMBER .'
+            sh 'sudo docker login -u $USER -p $PASS'
+            sh 'sudo docker push swarnavure/myimage1:$BUILD_NUMBER'
 }
                 }
             }
@@ -71,16 +71,13 @@ pipeline{
             agent any
             steps{
                 script{
-                 echo "Waiting for ec2 instance to initialise"
-                 sleep(time: 90, unit: "SECONDS")
-                 echo "Deploying the app to ec2-instance provisioned bt TF"
-                 echo "${EC2_PUBLIC_IP}"
-                   sshagent(['deploy-server-ssh-key']) {
+            echo "deploying the app"
+            sshagent(['deploy-server-ssh-key']) {
                       withCredentials([usernamePassword(credentialsId: 'dockerhub', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]) {
                         sh "ssh -o StrictHostKeyChecking=no ec2-user@${EC2_PUBLIC_IP} 'sudo docker login -u $USERNAME -p $PASSWORD'"
-                        sh "ssh -o StrictHostKeyChecking=no ec2-user@${EC2_PUBLIC_IP} 
-                   def ShellCmd="sudo docker run -itd -P swarnavure/myimage:$BUILD_NUMBER"
-                }
+                        sh "ssh -o StrictHostKeyChecking=no ec2-user@${EC2_PUBLIC_IP}  ${ShellCmd}"
+            def ShellCmd=sh "sudo docker run -itd -P swarnavure/myimage:$BUILD_NUMBER"
+        }
             }
     }
  }
