@@ -50,8 +50,8 @@ pipeline{
         }
         stage("Provision deploy server"){
         environment{
-            AWS_ACCESS_KEY_ID =credentials("AKIA45OPVZZFEMQNFAM2")
-            AWS_SECRET_ACCESS_KEY=credentials("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")
+            AWS_ACCESS_KEY_ID =credentials("AWS_ACCESS_KEY_ID")
+            AWS_SECRET_ACCESS_KEY=credentials("AWS_SECRET_ACCESS_KEY")
         }
         steps{
             script{
