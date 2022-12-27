@@ -33,7 +33,7 @@ pipeline{
                   sh 'mvn package'
               }
              }
-        }
+         }
         stage("Build the docker image"){
             steps{
                 script{
@@ -44,8 +44,8 @@ pipeline{
             sh 'sudo docker build -t swarnavure/myimage1:$BUILD_NUMBER .'
             sh 'sudo docker login -u $USER -p $PASS'
             sh 'sudo docker push swarnavure/myimage1:$BUILD_NUMBER'
-}
-                }
+            }
+              }
             }
         }
         stage("Provision deploy server"){
@@ -65,7 +65,7 @@ pipeline{
                 }
           }
         }  
-         }
+      }
 
           stage("Deploy on EC2 instance"){
             agent any
@@ -77,9 +77,10 @@ pipeline{
                         sh "ssh -o StrictHostKeyChecking=no ec2-user@${EC2_PUBLIC_IP} 'sudo docker login -u $USERNAME -p $PASSWORD'"
                         sh "ssh -o StrictHostKeyChecking=no ec2-user@${EC2_PUBLIC_IP}  ${ShellCmd}"
             def ShellCmd=sh "sudo docker run -itd -P swarnavure/myimage:$BUILD_NUMBER"
-        }
+           }
             }
+     }
     }
-  }
- }
+   }
+ } 
 }
